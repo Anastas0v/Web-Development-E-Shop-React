@@ -5,7 +5,9 @@ import EShopService from "../../repository/eShopRepository";
 import {BrowserRouter as Router, Redirect, Route} from 'react-router-dom'
 import Categories from "../Categories/categories";
 import Products from "../Products/ProductList/products";
+import ProductAdd from "../Products/ProductAdd/productAdd";
 import Header from "../Header/header";
+import ProductEdit from "../Products/ProductEdit/productEdit";
 
 class App extends Component
 {
@@ -14,7 +16,8 @@ class App extends Component
         this.state = {
             manufacturers: [],
             products: [],
-            categories: []
+            categories: [],
+            selectedProduct: {}
         }
     }
 
@@ -45,6 +48,36 @@ class App extends Component
             });
     }
 
+    deleteProduct = (id) => {
+        EShopService.deleteProduct(id)
+            .then(() => {
+                this.loadProducts();
+            })
+    }
+
+    addProduct = (name, price, quantity, category, manufacturer) => {
+        EShopService.addProduct(name, price, quantity, category, manufacturer)
+            .then(() => {
+                this.loadProducts();
+            });
+    }
+
+    getProduct = (id) => {
+        EShopService.getProduct(id)
+            .then((data) => {
+                this.setState({
+                    selectedProduct: data.data
+                })
+            })
+    }
+
+    editProduct = (id, name, price, quantity, category, manufacturer) => {
+        EShopService.editProduct(id, name, price, quantity, category, manufacturer)
+            .then(() => {
+                this.loadProducts();
+            });
+    }
+
     componentDidMount() {
         this.loadManufacturers();
         this.loadCategories();
@@ -54,11 +87,14 @@ class App extends Component
     render() {
         return (
             <Router>
+                <Header/>
                 <main>
                     <div className={"container"}>
                         <Route path={"/manufacturers"} exact render={() => <Manufacturers manufacturers={this.state.manufacturers}/>}/>
                         <Route path={"/categories"} exact render={() => <Categories categories={this.state.categories}/>}/>
-                        <Route path={"/products"} exact render={() => <Products products={this.state.products}/>}/>
+                        <Route path={"/products/add"} exact render={() => <ProductAdd categories={this.state.categories} manufacturers={this.state.manufacturers} onAddProduct={this.addProduct}/>}/>
+                        <Route path={"/products/edit/:id"} exact render={() => <ProductEdit categories={this.state.categories} manufacturers={this.state.manufacturers} onEditProduct={this.editProduct} product={this.state.selectedProduct}/>}/>
+                        <Route path={"/products"} exact render={() => <Products products={this.state.products} onDelete={this.deleteProduct}/>} onEdit={this.getProduct}/>
                         <Redirect to={"/products"}/>
                     </div>
                 </main>
