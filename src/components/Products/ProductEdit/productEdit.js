@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 
-const productEdit = (props) => {
+const ProductEdit = (props) => {
 
     const history = useHistory();
     const [formData, updateFormData] = React.useState({
@@ -94,4 +94,4 @@ const productEdit = (props) => {
     )
 }
 
-export default productEdit;
+export default ProductEdit;

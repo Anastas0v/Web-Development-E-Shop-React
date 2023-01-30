@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-const productAdd = (props) => {
+const ProductAdd = (props) => {
 
-    const history = useHistory;
+    const history = useHistory();
     const [formData, updateFormData] = React.useState({
         name: "",
         price: 0,
@@ -91,4 +91,4 @@ const productAdd = (props) => {
     )
 }
 
-export default productAdd;
+export default ProductAdd;
